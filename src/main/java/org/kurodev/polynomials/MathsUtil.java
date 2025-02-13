@@ -1,9 +1,6 @@
 package org.kurodev.polynomials;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MathsUtil {
@@ -59,43 +56,36 @@ public class MathsUtil {
         if (!findPrimes(mod).contains(mod)) {
             return Collections.emptyList();
         }
-        List<Polynomial> polynomials = generatePolynomials(degree, mod);
+        List<Polynomial> polynomials = new ArrayList<>(generatePolynomials(degree, mod));
         System.out.println("Checking " + polynomials.size() + " polynomials");
-        polynomials.removeIf(polynomial -> (polynomial.getDegree() <= 0)); //alle Polynome grad 0 entfernen
         polynomials.removeIf(polynomial -> ((polynomial.getLowestCoefficient() == 0))); //alle Polynome entfernen, die keine konstante haben
         polynomials.removeIf(polynomial -> (polynomial.hasZeros(mod))); //alle Polynome entfernen, die nullstellen haben
 
-        //alle die grad kleiner 4 sind, sind automatisch irreduzibel
-        List<Polynomial> irreducibles = new ArrayList<>();
-        System.out.println("Found " + irreducibles.size() + " irreducibles right away");
+        Set<Polynomial> irreducibles = new HashSet<>();
 
-        polynomials.removeIf(polynomial -> (polynomial.getDegree() < 4));
-
-        for (Polynomial polynomial : polynomials) {
-            boolean factorFound = false;
-            for (int i = 1; i <= polynomial.getDegree() / 2; i++) {
-                for (Polynomial factor : irreducibles) {
-                    if (polynomial.getDegree() / 2 < factor.getDegree()) {
-                        break; // Wenn der Faktor größer ist als die Hälfte des Polynoms, brauchen wir nicht checken
-                    }
-                    if (polynomial.isDivisibleBy(factor)) {
-                        factorFound = true; //kann faktorisiert werden, ist nicht irreduzibel
-                        break;
-                    }
+        Polynomial p = polynomials.removeFirst();
+        irreducibles.add(p);
+        int upperBound = Math.round((float) degree / 2);
+        while (p.getDegree() <= upperBound) {
+            for (Polynomial polynomial : polynomials) {
+                if (polynomial.getDegree() >= p.getDegree() * 2) {
+                    continue; // Wenn der Faktor größer ist als die Hälfte des Polynoms, brauchen wir nicht zu checken
                 }
-                if (factorFound) break;
+                if (!polynomial.isDivisibleBy(p)) {
+                    irreducibles.add(polynomial);//kann faktorisiert werden, ist nicht irreduzibel
+                }
             }
-            if (!factorFound) {
-//                System.out.println("Found: " + polynomial);
-                irreducibles.add(polynomial);
-            }
+            p = polynomials.removeFirst();
+            irreducibles.add(p);
         }
-        System.out.println("Found " + irreducibles.size() + " irreducibles in total");
-        return irreducibles;
+        irreducibles.addAll(polynomials);
+
+        System.out.println("Found " + irreducibles.stream().filter(polynomial -> polynomial.getDegree() == degree).count() + " irreducibles in total");
+        return new ArrayList<>(irreducibles);
     }
 
 
-    public static List<Polynomial> generatePolynomials(int degree, int mod) {
+    private static Set<Polynomial> generatePolynomials(int degree, int mod) {
         List<int[]> polynomials = new ArrayList<>();
         for (int i = 2; i < Math.pow(mod, degree + 1); i++) {
             polynomials.add(generatePolynomialCoefficients(i, degree, mod));
@@ -103,7 +93,7 @@ public class MathsUtil {
         return polynomials.stream()
                 .map(Polynomial::of)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     private static int[] generatePolynomialCoefficients(int number, int degree, int mod) {

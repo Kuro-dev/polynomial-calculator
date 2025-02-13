@@ -15,7 +15,8 @@ public class PolynomialParser {
             Pattern.CASE_INSENSITIVE | Pattern.COMMENTS);
 
     public static int[] parsePolynomial(String polynom) {
-        polynom = polynom.replaceAll("\\s+", "");
+
+        polynom = normalise(polynom);
         Map<Integer, Integer> map = polynomialToMap(polynom);
         assert !map.isEmpty() : "Map should not be empty";
 
@@ -26,6 +27,14 @@ public class PolynomialParser {
             result[i] = map.getOrDefault(exponent, 0);
         }
         return result;
+    }
+
+    private static String normalise(String polynome) {
+        polynome = polynome.replaceAll("\\s+", "");
+        for (int i = 0; i < Polynomial.SUPERSCRIPT_DIGITS.length; i++) {
+            polynome = polynome.replaceAll(Polynomial.SUPERSCRIPT_DIGITS[i], "^" + i);
+        }
+        return polynome;
     }
 
     private static Map<Integer, Integer> polynomialToMap(String polynomial) {

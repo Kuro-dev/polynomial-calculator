@@ -286,4 +286,80 @@ public class IrreduciblePolynomialsTest {
         }
     }
 
+    @Test
+    public void testDegree17() {
+        var polynomials = """
+                x^17 + x^3 + 1
+                x^17 + x^3 + x^2 + x^1 + 1
+                x^17 + x^5 + 1
+                x^17 + x^6 + 1
+                x^17 + x^8 + x^4 + x^3 + 1
+                x^17 + x^8 + x^7 + x^6 + x^4 + x^3 + 1
+                x^17 + x^10 + x^9 + x^8 + x^6 + x^5 + x^3 + x^2 + 1
+                x^17 + x^12 + x^6 + x^3 + x^2 + x^1 + 1
+                x^17 + x^12 + x^9 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
+                x^17 + x^12 + x^9 + x^7 + x^6 + x^4 + x^3 + x^2 + 1
+                x^17 + x^14 + x^11 + x^7 + x^5 + x^3 + x^2 + x^1 + 1
+                x^17 + x^15 + x^13 + x^11 + x^9 + x^7 + x^5 + x^3 + 1
+                x^17 + x^15 + x^13 + x^11 + x^9 + x^7 + x^6 + x^4 + x^2 + x^1 + 1
+                x^17 + x^16 + x^3 + x^1 + 1
+                """;
+        List<Polynomial> result = MathsUtil.findIrreducible(17, 2);
+        List<Polynomial> expected = Arrays.stream(polynomials.split("\n")).map(Polynomial::of).toList();
+        for (Polynomial polynomial : expected) {
+            assertTrue(result.contains(polynomial), "List should contain " + polynomial + ", but doesn't");
+        }
+    }
+
+    @Test
+    public void testDegree18() {
+        var polynomials = """
+                x^18 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
+                x^18 + x^7 + 1
+                x^18 + x^7 + x^5 + x^2 + x^1 + 1
+                x^18 + x^8 + x^2 + x^1 + 1
+                x^18 + x^9 + x^7 + x^6 + x^5 + x^4 + 1
+                x^18 + x^9 + x^8 + x^6 + x^5 + x^4 + x^2 + x^1 + 1
+                x^18 + x^9 + x^8 + x^7 + x^6 + x^4 + x^2 + x^1 + 1
+                x^18 + x^10 + x^7 + x^5 + 1
+                x^18 + x^10 + x^8 + x^5 + 1
+                x^18 + x^10 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
+                x^18 + x^10 + x^9 + x^3 + 1
+                x^18 + x^13 + x^6 + x^4 + 1
+                x^18 + x^15 + x^5 + x^2 + 1
+                x^18 + x^15 + x^9 + x^2 + 1
+                """;
+        List<Polynomial> result = MathsUtil.findIrreducible(18, 2);
+        List<Polynomial> expected = Arrays.stream(polynomials.split("\n")).map(Polynomial::of).toList();
+        for (Polynomial polynomial : expected) {
+            assertTrue(result.contains(polynomial), "List should contain " + polynomial + ", but doesn't");
+        }
+    }
+
+    @Test
+    public void testDegree19() {
+        var polynomials = """
+                x^19 + x^5 + x^2 + x^1 + 1
+                x^19 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
+                x^19 + x^6 + x^2 + x^1 + 1
+                x^19 + x^6 + x^5 + x^3 + x^2 + x^1 + 1
+                x^19 + x^6 + x^5 + x^4 + x^3 + x^2 + 1
+                x^19 + x^7 + x^5 + x^3 + x^2 + x^1 + 1
+                x^19 + x^8 + x^7 + x^5 + 1
+                x^19 + x^8 + x^7 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
+                x^19 + x^8 + x^7 + x^6 + x^4 + x^3 + x^2 + x^1 + 1
+                x^19 + x^9 + x^8 + x^5 + 1
+                x^19 + x^9 + x^8 + x^6 + x^5 + x^3 + x^2 + x^1 + 1
+                x^19 + x^9 + x^8 + x^7 + x^4 + x^3 + x^2 + x^1 + 1
+                x^19 + x^11 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + 1
+                x^19 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
+                x^19 + x^16 + x^13 + x^10 + x^7 + x^4 + x^1 + 1
+                """;
+        List<Polynomial> result = MathsUtil.findIrreducible(19, 2);
+        List<Polynomial> expected = Arrays.stream(polynomials.split("\n")).map(Polynomial::of).toList();
+        for (Polynomial polynomial : expected) {
+            assertTrue(result.contains(polynomial), "List should contain " + polynomial + ", but doesn't");
+        }
+    }
+
 }
