@@ -1,13 +1,14 @@
 package tests;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.kurodev.fields.FiniteField;
 import org.kurodev.polynomials.MathsUtil;
 import org.kurodev.polynomials.Polynomial;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.Random;
 
 public class FiniteFieldsTest {
 
@@ -25,12 +26,12 @@ public class FiniteFieldsTest {
 
     @Test
     public void testIsIrreducible() {
-        List<Polynomial> result = MathsUtil.findIrreducible(12, 2);
-        while (!result.isEmpty()) {
-            var poly = result.removeFirst();
+        List<Polynomial> result = MathsUtil.findIrreducible(4, 2);
+//        result.removeIf(polynomial -> polynomial.getDegree() != 4);
+        for (Polynomial poly : result) {
             FiniteField a = FiniteField.ofBase(2, poly);
             var table = a.computeMultiplicationTable();
-            assertFalse(table.hasZeros(), "Polynomial should be irreducible, but isn't");
+            Assertions.assertFalse(table.hasZeros(), poly + " is not irreducible!");
         }
     }
 

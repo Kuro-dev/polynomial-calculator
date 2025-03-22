@@ -1,0 +1,4 @@
+tests\FiniteFieldsTest.class
+tests\PolynomialTests.class
+tests\PrimeTests.class
+tests\IrreduciblePolynomialsTest.class

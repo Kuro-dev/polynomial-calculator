@@ -72,10 +72,7 @@ public class FiniteField {
         Polynomial[][] field = new Polynomial[baseValues.length][baseValues.length];
         for (int y = 0; y < baseValues.length; y++) {
             for (int x = y; x < baseValues.length; x++) {
-                field[y][x] = baseValues[x].multiply(baseValues[y]);
-                field[y][x] = field[y][x].truncate();
-                field[y][x] = field[y][x].modulo(base);
-
+                field[y][x] = baseValues[x].multiply(baseValues[y]).truncate().modulo(base);
 //                System.out.println("x: " + x + ", y: " + y);
                 field[x][y] = field[y][x];
             }

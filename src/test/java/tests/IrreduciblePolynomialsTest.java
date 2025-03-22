@@ -316,7 +316,6 @@ public class IrreduciblePolynomialsTest {
         var polynomials = """
                 x^18 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
                 x^18 + x^7 + 1
-                x^18 + x^7 + x^5 + x^2 + x^1 + 1
                 x^18 + x^8 + x^2 + x^1 + 1
                 x^18 + x^9 + x^7 + x^6 + x^5 + x^4 + 1
                 x^18 + x^9 + x^8 + x^6 + x^5 + x^4 + x^2 + x^1 + 1
@@ -353,7 +352,6 @@ public class IrreduciblePolynomialsTest {
                 x^19 + x^9 + x^8 + x^7 + x^4 + x^3 + x^2 + x^1 + 1
                 x^19 + x^11 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + 1
                 x^19 + x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^3 + x^2 + x^1 + 1
-                x^19 + x^16 + x^13 + x^10 + x^7 + x^4 + x^1 + 1
                 """;
         List<Polynomial> result = MathsUtil.findIrreducible(19, 2);
         List<Polynomial> expected = Arrays.stream(polynomials.split("\n")).map(Polynomial::of).toList();

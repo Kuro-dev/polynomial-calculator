@@ -5,16 +5,7 @@ import org.kurodev.polynomials.Polynomial;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Table {
-    private final Polynomial[][] table;
-    private final Polynomial[] baseValues;
-    private final String symbol;
-
-    public Table(String symbol, Polynomial[] baseValues, Polynomial[][] table) {
-        this.symbol = symbol;
-        this.table = table;
-        this.baseValues = baseValues;
-    }
+public record Table(String symbol, Polynomial[] baseValues, Polynomial[][] table) {
 
     //TODO change equals, such that it checks if 2 tables are not the same, but rather isomorphic
     @Override

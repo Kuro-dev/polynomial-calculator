@@ -2,16 +2,16 @@ package org.kurodev.polynomials;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Function;
 
 
 public class Polynomial {
-    static final String[] SUPERSCRIPT_DIGITS = {"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"};
+    public static final Polynomial EMPTY = Polynomial.of(new int[0]);
+    public static final String[] SUPERSCRIPT_DIGITS = {"⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"};
     private static final char SUPERSCRIPT_MINUS = '⁻';
     private final int[] polynomial;
 
     public Polynomial(int[] polynomial) {
-        if (polynomial.length == 0)
-            System.out.println("Empty poly");
         this.polynomial = polynomial;
     }
 
@@ -64,7 +64,7 @@ public class Polynomial {
         while (firstNonZero < polynomial.length && polynomial[firstNonZero] == 0) {
             firstNonZero++;
         }
-        if (firstNonZero == polynomial.length) return new Polynomial(new int[] {0});
+        if (firstNonZero == polynomial.length) return new Polynomial(new int[]{0});
         return new Polynomial(Arrays.copyOfRange(polynomial, firstNonZero, polynomial.length));
     }
 
@@ -109,7 +109,7 @@ public class Polynomial {
 
     public DivisionResult divideBy(Polynomial other) {
         if (polynomial.length < other.polynomial.length) {
-            return new DivisionResult(new Polynomial(new int[]{0}), this); //a ist kleiner, ist also direkt der Rest
+            return new DivisionResult(EMPTY, this); //a ist kleiner, ist also direkt der Rest
         }
         int[] result = new int[(polynomial.length - other.polynomial.length) + 1];
         return divideBy(other, result);
@@ -125,11 +125,11 @@ public class Polynomial {
         }
         int x = polynomial[0];
         int y = divisor.polynomial[0];
-        int gradUnterschied = polynomial.length - divisor.polynomial.length;
-        double rs = (double) x / y;
-        result[(result.length - 1) - gradUnterschied] = (int) rs;
+        int degreeDelta = polynomial.length - divisor.polynomial.length;
+        double factor = (double) x / y;
+        result[(result.length - 1) - degreeDelta] = (int) factor;
 
-        Polynomial multiplied = divisor.multiply(rs, gradUnterschied);
+        Polynomial multiplied = divisor.multiply(factor, degreeDelta);
         var subtracted = subtract(multiplied);
         if (subtracted.getDegree() >= getDegree()) {
             // If the degree doesn't decrease, there is an issue in the division
@@ -183,6 +183,14 @@ public class Polynomial {
 
     @Override
     public String toString() {
+        return toString(Polynomial::toSuperScript);
+    }
+
+    public String toNonSuperscriptString() {
+        return toString(deg -> "^" + deg);
+    }
+
+    private String toString(Function<Integer, String> degreeConverter) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < polynomial.length; i++) {
             int grad = getDegree() - i;
@@ -204,7 +212,7 @@ public class Polynomial {
                 if (grad == 1)
                     sb.append("x");
                 else if (grad != 0)
-                    sb.append("x").append(toSuperScript(grad));
+                    sb.append("x").append(degreeConverter.apply(grad));
             }
         }
         return sb.toString();
@@ -213,7 +221,7 @@ public class Polynomial {
     public int solve(int x) {
         int sum = 0;
         for (int i = 0; i < polynomial.length; i++) {
-            int exponent = (getDegree()) - i;
+            int exponent = getDegree() - i;
             sum += (int) (polynomial[i] * Math.pow(x, exponent));
         }
         return sum;
@@ -222,7 +230,7 @@ public class Polynomial {
     /**
      * Has zero values within the specified range
      *
-     * @param range
+     * @param range the Modulo
      */
     public boolean hasZeros(int range) {
         for (int i = 0; i < range; i++) {
@@ -235,7 +243,7 @@ public class Polynomial {
 
 
     /**
-     * grad des polynomials
+     * grad des polynomials. GGF falsch, wenn der höchste exponent 0 ist.
      */
     public int getDegree() {
         return polynomial.length - 1;
@@ -250,36 +258,12 @@ public class Polynomial {
         return MathsUtil.findIrreducible(getDegree(), mod).contains(this);
     }
 
-    /**
-     * true if the polynomial is of mod n
-     */
-    public boolean isMod(int n) {
-        for (int i : polynomial) {
-            if (i < 0 || i >= n) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private boolean isPositive(int index) {
         return polynomial[index] >= 0;
     }
 
-    private boolean eisensteinCriterion(int p) {
-        if (polynomial[0] % p == 0) { //leitkoeffizient
-            return false;
-        }
-        for (int i = 1; i < polynomial.length; i++) {
-            if (polynomial[i] % p != 0) {
-                return false;
-            }
-        }
-        return polynomial[getDegree()] % (int) Math.pow(p, 2) != 0;
-    }
-
     /**
-     * @return true wenn die Koeffizienten des Polynoms keine gemeinsamen teiler haben.
+     * @return true, wenn die Koeffizienten des Polynoms keine gemeinsamen teiler haben.
      */
     public boolean isPrimitive() {
         for (int i = 0; i < polynomial.length; i++) {

@@ -1,12 +1,30 @@
 package org.kurodev;
 
-import org.kurodev.polynomials.MathsUtil;
-import org.kurodev.polynomials.Polynomial;
+import org.kurodev.ui.MainWindow;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 
 public class Main {
+    static {
+        UIManager.put("TableHeader.background", Color.lightGray);
+        UIManager.put("TableHeader.foreground", Color.black);
+
+        UIManager.put("TableHeader.selectionBackground", Color.cyan);
+        UIManager.put("TableHeader.selectionForeground", Color.black);
+
+        UIManager.put("Table.font", new java.awt.Font("Arial", java.awt.Font.PLAIN, 12));
+
+
+        Border border = BorderFactory.createMatteBorder(0, 0, 1, 1, Color.gray);
+        UIManager.put("TableHeader.cellBorder", border);
+
+
+    }
+
     public static void main(String[] args) {
-        Polynomial a = Polynomial.of("2x^4+x^2+2");
-        Polynomial b = Polynomial.of("x^3+2x+1");
-        MathsUtil.findIrreducible(3, 7);
+        MainWindow window = new MainWindow("Körperwelten");
+        window.setVisible(true);
     }
 }

@@ -1,0 +1,13 @@
+org\kurodev\webserver\GaloisFieldController.class
+org\kurodev\polynomials\Polynomial.class
+org\kurodev\fields\Table.class
+org\kurodev\polynomials\MathsUtil.class
+org\kurodev\polynomials\PolynomialParser.class
+org\kurodev\webserver\polynomials\PolynomialRequest.class
+org\kurodev\webserver\field\FieldTableResponse.class
+org\kurodev\polynomials\DivisionResult.class
+org\kurodev\webserver\field\FieldTableRequest.class
+org\kurodev\webserver\polynomials\PolynomialResponse.class
+org\kurodev\Main.class
+org\kurodev\fields\FiniteField.class
+org\kurodev\webserver\field\FieldWrapper.class

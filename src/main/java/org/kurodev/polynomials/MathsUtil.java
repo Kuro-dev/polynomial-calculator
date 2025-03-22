@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MathsUtil {
+    private static final Set<Polynomial> irreducibleCache = new HashSet<>();
+
     /**
      * Euklidischer algorithmus für GGT
      */
@@ -57,13 +59,17 @@ public class MathsUtil {
             return Collections.emptyList();
         }
         List<Polynomial> polynomials = new ArrayList<>(generatePolynomials(degree, mod));
-        System.out.println("Checking " + polynomials.size() + " polynomials");
         polynomials.removeIf(polynomial -> ((polynomial.getLowestCoefficient() == 0))); //alle Polynome entfernen, die keine konstante haben
         polynomials.removeIf(polynomial -> (polynomial.hasZeros(mod))); //alle Polynome entfernen, die nullstellen haben
 
-        Set<Polynomial> irreducibles = new HashSet<>();
-
-        Polynomial p = polynomials.removeFirst();
+        Set<Polynomial> irreducibles = irreducibleCache;
+        polynomials.removeIf(irreducibles::contains);
+        if (polynomials.isEmpty()) {
+            Collection<Polynomial> ret = irreducibles.stream().filter(polynomial -> polynomial.getDegree() == degree).collect(Collectors.toCollection(ArrayList::new));
+            return new ArrayList<>(ret);
+        }
+        System.out.println("Checking " + polynomials.size() + " polynomials");
+        Polynomial p = polynomials.remove(0);
         irreducibles.add(p);
         int upperBound = Math.round((float) degree / 2);
         while (p.getDegree() <= upperBound) {
@@ -75,13 +81,14 @@ public class MathsUtil {
                     irreducibles.add(polynomial);//kann faktorisiert werden, ist nicht irreduzibel
                 }
             }
-            p = polynomials.removeFirst();
+            p = polynomials.remove(0);
             irreducibles.add(p);
         }
         irreducibles.addAll(polynomials);
 
         System.out.println("Found " + irreducibles.stream().filter(polynomial -> polynomial.getDegree() == degree).count() + " irreducibles in total");
-        return new ArrayList<>(irreducibles);
+        Collection<Polynomial> ret = irreducibles.stream().filter(polynomial -> polynomial.getDegree() == degree).collect(Collectors.toCollection(ArrayList::new));
+        return new ArrayList<>(ret);
     }
 
 
